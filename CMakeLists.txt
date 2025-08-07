@@ -12,7 +12,13 @@ set(NATO_PHONETIC_ALPHABET
 )
 
 execute_process(
-  COMMAND git -c safe.directory='${CMAKE_SOURCE_DIR}' describe --tags
+  COMMAND git config --global --add safe.directory /project
+  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+  OUTPUT_QUIET
+)
+
+execute_process(
+  COMMAND git describe --tags
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
   OUTPUT_VARIABLE PROJECT_VERSION
   OUTPUT_STRIP_TRAILING_WHITESPACE
@@ -30,7 +36,7 @@ if (DEFINED PROJECT_VERSION AND NOT "${PROJECT_VERSION}" STREQUAL "")
 else()
   set(PROJECT_VERSION "Unknown")
   execute_process(
-    COMMAND git -c safe.directory='${CMAKE_SOURCE_DIR}' log --pretty=format:%h -1
+    COMMAND git log --pretty=format:%h -1
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     OUTPUT_VARIABLE PROJECT_VERSION_PATCH
     OUTPUT_STRIP_TRAILING_WHITESPACE
